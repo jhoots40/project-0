@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "project-0.h"
 
 
@@ -44,9 +45,18 @@ int main(int argc, char* argv[]){
   }
   //Prints world array to console
   print_world(world);
+  
+  //Haas's code to check all argument locations
+  
+  while(1){
+     ++world[11][11];
+     update_rec(11, 11, world);
+     print_world(world);
+     usleep(1000000 / fps);
+  }
 }
 
-void update_rec(int x, int y, int table[23][23]) {
+void update_rec(int x, int y, int table[WORLD_SIZE][WORLD_SIZE]) {
    if (table[y][x] <= 8) {
       return;
    }
@@ -56,7 +66,9 @@ void update_rec(int x, int y, int table[23][23]) {
    
    for (j = y - 1; j < y + 2; j++) {
       for (i = x - 1; i < x + 2; i++) {
-         
+         if (j < 0 || j >= WORLD_SIZE || i < 0 || i >= WORLD_SIZE || table[j][i] == -1){
+            continue;
+         }
          table[j][i] = table[j][i] + 1;
          update_rec(i, j, table);
       }
@@ -69,10 +81,12 @@ void update_rec(int x, int y, int table[23][23]) {
 
 void print_world(int world[WORLD_SIZE][WORLD_SIZE]){
   int i, j;
-  for(i = 0; i < WORLD_SIZE; i++){
-    for(j = 0; j < WORLD_SIZE; j++){
-      
-      printf("%d", world[i][j]);
+  for(j = 0; j < WORLD_SIZE; j++){
+    for(i = 0; i < WORLD_SIZE; i++){
+      if(world[j][i] == -1) {
+         printf("# ");
+      }
+      printf("%d ", world[j][i]);
     }
     printf("\n");
   }
