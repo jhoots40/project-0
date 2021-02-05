@@ -40,13 +40,17 @@ int main(int argc, char* argv[]){
     int x = atoi(argv[start]);
     int y = atoi(argv[start+1]);
     int size = atoi(argv[start+2]);
-    world[x][y] = size;
+    world[y][x] = size;
+    
+    //this condition is here to check if the user defines a space in the world greater than 8
+    //then runs recursive function on that spot.
+    if (size > 8) {
+       update_rec(x, y, world);
+    }
     start += 3;
   }
   //Prints world array to console
   print_world(world);
-  
-  //Haas's code to check all argument locations
   
   while(1){
      ++world[11][11];
@@ -85,6 +89,7 @@ void print_world(int world[WORLD_SIZE][WORLD_SIZE]){
     for(i = 0; i < WORLD_SIZE; i++){
       if(world[j][i] == -1) {
          printf("# ");
+         continue;
       }
       printf("%d ", world[j][i]);
     }
